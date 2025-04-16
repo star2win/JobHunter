@@ -5,6 +5,24 @@ from crewai.project import CrewBase, agent, crew, task
 # you can use the @before_kickoff and @after_kickoff decorators
 # https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
 
+from crewai_tools import (
+    FileReadTool,
+    ScrapeWebsiteTool,
+    MDXSearchTool,
+    SerperDevTool  # Note the updated name for SerperDevTool
+)
+
+import os
+serper_api_key = os.environ.get('SERPER_API_KEY')
+if not serper_api_key:
+    raise ValueError("Please set SERPER_API_KEY environment variable")
+
+# Instantiate tools
+search_tool = SerperDevTool(api_key=serper_api_key)  # Updated initialization
+scrape_tool = ScrapeWebsiteTool()
+read_resume = FileReadTool(file_path='./fake_resume.md')
+semantic_search_resume = MDXSearchTool(mdx='./fake_resume.md')
+
 @CrewBase
 class Jobhunter():
     """Jobhunter crew"""
